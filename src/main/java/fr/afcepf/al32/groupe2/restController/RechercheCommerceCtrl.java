@@ -29,7 +29,7 @@ public class RechercheCommerceCtrl {
 		try {
 			listeCommerce = rechercheCommerceService.rechercherShopsByPerimetreEtDepart(source, perimetre);
 		} catch (Exception e) {
-			log.info("souci avec", listeCommerce.size(), RechercheCommerceCtrl.class);
+			log.info(e.getMessage());
 		} finally {
 
 		}

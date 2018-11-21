@@ -34,12 +34,12 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 	OkHttpClient client = new OkHttpClient();
 
 	private Collection<Shop> findShops() {
-		return commerceDao.findAll();
+		return commerceDao.findAllShops();
 	}
 
 	private Collection<String> listeAdressesDeCommerces() {
-		Collection<String> addresses = new ArrayList();
-		Iterator<Shop> tousShops = (Iterator<Shop>) commerceDao.findAll();
+		Collection<String> addresses = null;
+		Iterator<Shop> tousShops = commerceDao.findAllShops().iterator();
 		if (tousShops != null) {
 			while (tousShops.hasNext()) {
 				Shop shop = tousShops.next();

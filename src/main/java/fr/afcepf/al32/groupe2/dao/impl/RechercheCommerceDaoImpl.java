@@ -16,27 +16,13 @@ import fr.afcepf.al32.groupe2.entity.Shop;
 public class RechercheCommerceDaoImpl implements IRechercheCommerceDao {
 	@PersistenceContext
 	private EntityManager entityManager;
-	
-	private final String ALL_COMMERCES = "Shop.findAll";
 
+	private final String ALL_COMMERCES = "SELECT s FROM Shop s";
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Shop> findAll() {
-		return entityManager.createNamedQuery(ALL_COMMERCES, Shop.class).getResultList();
-
-	}
-
-	@Override
-	public Shop findOne(Long numero) {
-		return null;
-	}
-
-	@Override
-	public void save(Shop p) {
-
-	}
-
-	@Override
-	public void delete(Long numero) {
+	public List<Shop> findAllShops() {
+		return entityManager.createQuery(ALL_COMMERCES, Shop.class).getResultList();
 	}
 
 }
