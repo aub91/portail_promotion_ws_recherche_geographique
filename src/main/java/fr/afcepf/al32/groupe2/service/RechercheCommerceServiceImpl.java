@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.StringJoiner;
 
 import javax.transaction.Transactional;
@@ -60,7 +59,7 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 	}
 
 	@Override
-	public Collection<Shop> rechercherShopsByPerimetreEtDepart(String source, String perimetre) throws IOException {
+	public Collection<Shop> rechercherShopsByPerimetreEtDepart(String source, Integer perimetre) throws IOException {
 		Collection<String> addresses = listeAdressesDeCommerces();
 
 		String response = demanderDistanceGoogleApi(source, addresses);
@@ -117,18 +116,17 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 		return map;
 	}
 
-	private Collection<Shop> filtrerShopDansPerimetre(Map<Shop, String> map, String perimetre) {
-		Collection<Shop> shopsFiltres = null;
-		Iterator<Entry<Shop, String>> it = map.entrySet().iterator();
-		// Stream<Map.Entry<Shop,String>> sorted =
-		// map.entrySet().stream().sorted(Map.Entry.comparingByValue());
-
-		while (it.hasNext()) {
-			Map.Entry<Shop, String> pair = (Map.Entry<Shop, String>) it.next();
-			shopsFiltres.add(pair.getKey());
+	private Collection<Shop> filtrerShopDansPerimetre(Map<Shop, String> map, Integer perimetre) {
+		ArrayList<Shop> listeshop = new ArrayList<Shop>();
+		perimetre *= 1000;
+		Iterator iterator = map.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry mentry = (Map.Entry) iterator.next();
+			if ((Integer) mentry.getValue() <= perimetre) {
+				listeshop.add((Shop) mentry.getKey());
+			}
 		}
-
-		return shopsFiltres;
+		return listeshop;
 	}
 
 }

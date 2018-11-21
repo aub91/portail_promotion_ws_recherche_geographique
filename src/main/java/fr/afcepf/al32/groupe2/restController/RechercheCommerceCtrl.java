@@ -23,7 +23,7 @@ public class RechercheCommerceCtrl {
 
 	@GetMapping("")
 	public Collection<Shop> getCommerce(@RequestParam("source") String source,
-			@RequestParam("perimetre") String perimetre) {
+			@RequestParam("perimetre") Integer perimetre) {
 
 		Collection<Shop> listeCommerce = null;
 		try {

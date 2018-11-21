@@ -9,5 +9,5 @@ public interface IRechercheCommerceService {
 
 	// public Collection<Shop> findShops();
 
-	Collection<Shop> rechercherShopsByPerimetreEtDepart(String source, String perimetre) throws IOException;
+	Collection<Shop> rechercherShopsByPerimetreEtDepart(String source, Integer perimetre) throws IOException;
 }
