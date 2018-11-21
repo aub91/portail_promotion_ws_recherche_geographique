@@ -1,8 +1,9 @@
 package fr.afcepf.al32.groupe2.restController;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import fr.afcepf.al32.groupe2.service.IRechercheCommerceService;
 @RestController // composant spring de type controller de WS REST
 @RequestMapping(value = "/rest/rechercheGeo", headers = "Accept=application/json")
 public class RechercheCommerceCtrl {
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private IRechercheCommerceService rechercheCommerceService;
@@ -23,16 +25,16 @@ public class RechercheCommerceCtrl {
 	public Collection<Shop> getCommerce(@RequestParam("source") String source,
 			@RequestParam("perimetre") String perimetre) {
 
-		Collection<Shop> listeInitiale = new ArrayList();
+		Collection<Shop> listeCommerce = null;
 		try {
-			rechercheCommerceService.rechercherShopsByPerimetreEtDepart(source, perimetre);
+			listeCommerce = rechercheCommerceService.rechercherShopsByPerimetreEtDepart(source, perimetre);
 		} catch (Exception e) {
-			System.out.println("Exception Occurred");
+			log.info("souci avec", listeCommerce.size(), RechercheCommerceCtrl.class);
 		} finally {
 
 		}
 
-		return listeInitiale;
+		return listeCommerce;
 
 	}
 }

@@ -7,10 +7,7 @@ import fr.afcepf.al32.groupe2.entity.Shop;
 
 public interface IRechercheCommerceService {
 
-	//public Collection<Shop> findShops();
-
-
-	Collection<String> listeAdressesDeCommerces();
+	// public Collection<Shop> findShops();
 
 	Collection<Shop> rechercherShopsByPerimetreEtDepart(String source, String perimetre) throws IOException;
 }
