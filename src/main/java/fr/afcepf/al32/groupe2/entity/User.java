@@ -21,6 +21,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="core_user")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -52,7 +54,6 @@ public abstract class User {
 	private String phoneNumber;
 	
 	@OneToOne(mappedBy="user",cascade= {CascadeType.ALL}, optional=false)
-	
 	private AuthenticationData authenticationData;
 	
 	@OneToMany(cascade=CascadeType.ALL)

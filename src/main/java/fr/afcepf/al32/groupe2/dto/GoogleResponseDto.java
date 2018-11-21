@@ -9,6 +9,8 @@ public class GoogleResponseDto {
 
 	private List<Rows> rows;
 
+	private String status;
+
 	public List<Rows> getRows() {
 		return rows;
 	}
@@ -16,5 +18,14 @@ public class GoogleResponseDto {
 	public void setRows(List<Rows> rows) {
 		this.rows = rows;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.afcepf.al32.groupe2.dto.ShopDto;
 import fr.afcepf.al32.groupe2.entity.Shop;
 import fr.afcepf.al32.groupe2.service.IRechercheCommerceService;
 
@@ -22,10 +23,10 @@ public class RechercheCommerceCtrl {
 	private IRechercheCommerceService rechercheCommerceService;
 
 	@GetMapping("")
-	public Collection<Shop> getCommerce(@RequestParam("source") String source,
+	public Collection<ShopDto> getCommerce(@RequestParam("source") String source,
 			@RequestParam("perimetre") Integer perimetre) {
 
-		Collection<Shop> listeCommerce = null;
+		Collection<ShopDto> listeCommerce = null;
 		try {
 			listeCommerce = rechercheCommerceService.rechercherShopsByPerimetreEtDepart(source, perimetre);
 		} catch (Exception e) {

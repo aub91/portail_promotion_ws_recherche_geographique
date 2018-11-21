@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.afcepf.al32.groupe2.dao.IRechercheCommerceDao;
+import fr.afcepf.al32.groupe2.dto.Element;
 import fr.afcepf.al32.groupe2.dto.GoogleResponseDto;
+import fr.afcepf.al32.groupe2.dto.ShopDto;
 import fr.afcepf.al32.groupe2.entity.Shop;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,7 +41,7 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 	}
 
 	private Collection<String> listeAdressesDeCommerces() {
-		Collection<String> addresses = null;
+		Collection<String> addresses = new ArrayList();
 		Iterator<Shop> tousShops = commerceDao.findAllShops().iterator();
 		if (tousShops != null) {
 			while (tousShops.hasNext()) {
@@ -59,27 +62,29 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 	}
 
 	@Override
-	public Collection<Shop> rechercherShopsByPerimetreEtDepart(String source, Integer perimetre) throws IOException {
+	public Collection<ShopDto> rechercherShopsByPerimetreEtDepart(String source, Integer perimetre) throws IOException {
 		Collection<String> addresses = listeAdressesDeCommerces();
 
 		String response = demanderDistanceGoogleApi(source, addresses);
 		ObjectMapper mapper = new ObjectMapper();
-		Collection<Shop> shopsFiltres = null;
+		Collection<ShopDto> shopsFiltres = new ArrayList<>();
 		GoogleResponseDto googleResponseDto = null;
-		if (response != null) {
-			googleResponseDto = mapper.readValue(response, GoogleResponseDto.class);
 
-			Map<Shop, String> map = extractJsonFromRequest(googleResponseDto);
+		googleResponseDto = mapper.readValue(response, GoogleResponseDto.class);
+		Map<ShopDto, Integer> map = extractJsonFromRequest(googleResponseDto);
+		if (!map.isEmpty()) {
 			shopsFiltres = filtrerShopDansPerimetre(map, perimetre);
 		} else {
-			shopsFiltres = findShops();
+			Collection<Shop> list = findShops();
+			for (Shop shop : list) {
+				shopsFiltres.add(new ShopDto(shop));
+			}
 		}
 
 		return shopsFiltres;
 	}
 
 	private String demanderDistanceGoogleApi(String source, Collection<String> destinations) throws IOException {
-		String stringResponse = null;
 		StringJoiner joiner = new StringJoiner(PIPE);
 		for (String destination : destinations) {
 			joiner.add(destination);
@@ -88,42 +93,40 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 
 		Request request = null;
 		Response response = null;
-		if (null != source && source.isEmpty()) {
+		if (null != source && !source.isEmpty()) {
 			String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + source + "&destinations="
 					+ strDestinations + "&key=" + API_KEY;
 			request = new Request.Builder().url(url).build();
 			response = client.newCall(request).execute();
 		}
 
-		if (response != null) {
-			stringResponse = response.body().string();
-		}
-		return stringResponse;
+		return response.body().string();
 	}
 
-	private Map<Shop, String> extractJsonFromRequest(GoogleResponseDto response) {
+	private Map<ShopDto, Integer> extractJsonFromRequest(GoogleResponseDto response) {
 
-		String distanceTaken = response.getRows().get(0).getElements().get(0).getDistance().getValue();
-		String[] distance = distanceTaken.split(StringUtils.SPACE);
+		List<Element> elementList = response.getRows().get(0).getElements();
 
-		Map<Shop, String> map = new HashMap<>();
+		Map<ShopDto, Integer> map = new HashMap<>();
 		Collection<Shop> tousShops = findShops();
 		int i = 0;
 		for (Shop shop : tousShops) {
-			map.put(shop, distance[i]);
+			if (elementList.get(i).getDistance() != null) {
+				map.put(new ShopDto(shop), elementList.get(i).getDistance().getValue());
+			}
 			i++;
 		}
 		return map;
 	}
 
-	private Collection<Shop> filtrerShopDansPerimetre(Map<Shop, String> map, Integer perimetre) {
-		ArrayList<Shop> listeshop = new ArrayList<Shop>();
+	private Collection<ShopDto> filtrerShopDansPerimetre(Map<ShopDto, Integer> map, Integer perimetre) {
+		ArrayList<ShopDto> listeshop = new ArrayList<>();
 		perimetre *= 1000;
-		Iterator iterator = map.entrySet().iterator();
+		Iterator<Map.Entry<ShopDto, Integer>> iterator = map.entrySet().iterator();
 		while (iterator.hasNext()) {
-			Map.Entry mentry = (Map.Entry) iterator.next();
-			if ((Integer) mentry.getValue() <= perimetre) {
-				listeshop.add((Shop) mentry.getKey());
+			Map.Entry<ShopDto, Integer> mentry = iterator.next();
+			if (mentry.getValue() <= perimetre) {
+				listeshop.add(mentry.getKey());
 			}
 		}
 		return listeshop;

@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TextValue {
-	private String value;
+	private Integer value;
 
-	public void setValue(String value) {
-		this.value = value;
+	public Integer getValue() {
+		return value;
 	}
 
-	public String getValue() {
-		return value;
+	public void setValue(Integer value) {
+		this.value = value;
 	}
 
 }
