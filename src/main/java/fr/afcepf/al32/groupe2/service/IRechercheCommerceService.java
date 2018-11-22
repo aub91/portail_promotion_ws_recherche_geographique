@@ -1,14 +1,15 @@
 package fr.afcepf.al32.groupe2.service;
 
 import java.io.IOException;
-import java.util.Collection;
 
-import fr.afcepf.al32.groupe2.dto.ShopDto;
-import fr.afcepf.al32.groupe2.entity.Shop;
+import fr.afcepf.al32.groupe2.dto.ResponseGeoApiDto;
+import fr.afcepf.al32.groupe2.dto.ResponseWsDto;
 
 public interface IRechercheCommerceService {
 
-	// public Collection<Shop> findShops();
+	ResponseWsDto rechercherShopsByPerimetreEtDepart(String source, Integer perimetre) throws IOException;
 
-	Collection<ShopDto> rechercherShopsByPerimetreEtDepart(String source, Integer perimetre) throws IOException;
+	ResponseGeoApiDto verifierVraiAdresse(String source);
+
+	ResponseWsDto shopToResponseWsDtoConverter(String source, Integer perimetre);
 }
