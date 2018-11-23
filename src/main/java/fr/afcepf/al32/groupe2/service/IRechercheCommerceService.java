@@ -2,8 +2,9 @@ package fr.afcepf.al32.groupe2.service;
 
 import java.io.IOException;
 
-import fr.afcepf.al32.groupe2.dto.ResponseGeoApiDto;
-import fr.afcepf.al32.groupe2.dto.ResponseWsDto;
+import fr.afcepf.al32.groupe2.ws.dto.ResponseGeoApiDto;
+import fr.afcepf.al32.groupe2.ws.dto.ResponseWsDto;
+
 
 public interface IRechercheCommerceService {
 

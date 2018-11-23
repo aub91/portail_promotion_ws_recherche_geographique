@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.afcepf.al32.groupe2.dto.ResponseGeoApiDto;
-import fr.afcepf.al32.groupe2.dto.ResponseWsDto;
 import fr.afcepf.al32.groupe2.service.IRechercheCommerceService;
+import fr.afcepf.al32.groupe2.ws.dto.ResponseGeoApiDto;
+import fr.afcepf.al32.groupe2.ws.dto.ResponseWsDto;
 
 @RestController // composant spring de type controller de WS REST
 @RequestMapping(value = "/rest/rechercheGeo", headers = "Accept=application/json")
@@ -38,7 +38,7 @@ public class RechercheCommerceCtrl {
 			responseWsDto.setStatus("OK");
 		} catch (Exception e) {
 			log.info(e.getMessage());
-		} 
+		}
 
 		return responseWsDto;
 

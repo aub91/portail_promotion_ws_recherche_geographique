@@ -25,12 +25,12 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.afcepf.al32.groupe2.dao.IRechercheCommerceDao;
-import fr.afcepf.al32.groupe2.dto.Element;
-import fr.afcepf.al32.groupe2.dto.GoogleResponseDto;
-import fr.afcepf.al32.groupe2.dto.ResponseGeoApiDto;
-import fr.afcepf.al32.groupe2.dto.ResponseWsDto;
-import fr.afcepf.al32.groupe2.dto.ShopDto;
 import fr.afcepf.al32.groupe2.entity.Shop;
+import fr.afcepf.al32.groupe2.ws.dto.Element;
+import fr.afcepf.al32.groupe2.ws.dto.GoogleResponseDto;
+import fr.afcepf.al32.groupe2.ws.dto.ResponseGeoApiDto;
+import fr.afcepf.al32.groupe2.ws.dto.ResponseWsDto;
+import fr.afcepf.al32.groupe2.ws.dto.ShopDto;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -56,7 +56,7 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 		Collection<Shop> tousShops = findShops();
 		List<ShopDto> list = new ArrayList<>();
 		for (Shop shop : tousShops) {
-			list.add(new ShopDto(shop));
+			list.add(new ShopDto(shop.getId()));
 		}
 		return new ResponseWsDto(list, source, perimetre, null);
 	}
@@ -128,9 +128,6 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 			if (null != source && !source.isEmpty()) {
 				url = "https://maps.googleapis.com/maps/api/geocode/json?address="
 						+ URLEncoder.encode(sourceModifiee, "UTF-8") + "&key=" + URLEncoder.encode(API_KEY, "UTF-8");
-
-				// url = "http://maps.googleapis.com/maps/api/geocode/json?address=" +
-				// locationAddres + "&key=" + API_KEY;// "&sensor=true";
 			}
 
 			URL urlObj = new URL(url);
@@ -187,7 +184,7 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 		int i = 0;
 		for (Shop shop : tousShops) {
 			if (elementList.get(i).getDistance() != null) {
-				map.put(new ShopDto(shop), elementList.get(i).getDistance().getValue());
+				map.put(new ShopDto(shop.getId()), elementList.get(i).getDistance().getValue());
 			}
 			i++;
 		}
