@@ -125,7 +125,7 @@ public class RechercheCommerceServiceImpl implements IRechercheCommerceService {
 		try {
 			String sourceModifiee = source.replaceAll(StringUtils.SPACE, SPACE);
 
-			if (null != source && !source.isEmpty()) {
+			if (source != null && !source.isEmpty()) {
 				url = "https://maps.googleapis.com/maps/api/geocode/json?address="
 						+ URLEncoder.encode(sourceModifiee, "UTF-8") + "&key=" + URLEncoder.encode(API_KEY, "UTF-8");
 			}
